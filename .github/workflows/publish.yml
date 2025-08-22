@@ -5,6 +5,7 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:  # Allow manual triggering
+  workflow_call:      # Allow calling from other workflows
 
 permissions:
   contents: read
