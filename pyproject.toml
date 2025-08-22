@@ -7,15 +7,15 @@ name = "soren-n-qt-web-bridge"
 version = "0.1.0"
 description = "Clean Qt WebView widgets for hosting modern web UIs without styling conflicts"
 readme = "README.md"
-license = {file = "LICENSE"}
+license = {text = "GPL-3.0-or-later"}
 authors = [
-    {name = "Your Name", email = "your.email@example.com"},
+    {name = "Soren N", email = "soren@example.com"},
 ]
 keywords = ["qt", "webview", "bridge", "javascript", "pyside6", "qtpy"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -120,6 +120,7 @@ qt_api = "pyside6"
 [dependency-groups]
 dev = [
     "build>=1.3.0",
+    "twine>=6.1.0",
 ]
 docs = [
     "furo>=2025.7.19",

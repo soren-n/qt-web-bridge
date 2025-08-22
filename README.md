@@ -2,7 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/soren-n-qt-web-bridge.svg)](https://badge.fury.io/py/soren-n-qt-web-bridge)
 [![Python versions](https://img.shields.io/pypi/pyversions/soren-n-qt-web-bridge.svg)](https://pypi.org/project/soren-n-qt-web-bridge/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 Clean Qt WebView widgets for hosting modern web UIs without styling conflicts.
 
@@ -168,4 +168,4 @@ python examples/bridge_communication_example.py
 
 ## 📄 License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+GPL v3 or later - see [LICENSE](LICENSE) file for details.
