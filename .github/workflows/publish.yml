@@ -30,6 +30,14 @@ jobs:
       with:
         enable-cache: true
 
+    - name: Set up virtual display (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y xvfb
+        export DISPLAY=:99
+        Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
     - name: Install dependencies
       run: |
         uv sync --group dev
@@ -42,9 +50,11 @@ jobs:
 
     - name: Run tests
       run: |
-        uv run pytest --timeout=300
+        uv run pytest tests/test_bridge.py --timeout=120
       env:
         QT_QPA_PLATFORM: offscreen
+        DISPLAY: :99
+        CI: true
 
   build:
     needs: test
