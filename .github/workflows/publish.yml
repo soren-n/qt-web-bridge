@@ -30,11 +30,11 @@ jobs:
       with:
         enable-cache: true
 
-    - name: Set up virtual display (Linux)
+    - name: Set up virtual display and Qt dependencies (Linux)
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt-get install -y xvfb
+        sudo apt-get install -y xvfb libxkbcommon-x11-0 libxcb-xinerama0 libxcb-cursor0 libxcb-shape0 libxcb-randr0 libegl1-mesa libgl1-mesa-glx
         export DISPLAY=:99
         Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
@@ -55,6 +55,7 @@ jobs:
         QT_QPA_PLATFORM: offscreen
         DISPLAY: :99
         CI: true
+        QT_LOGGING_RULES: "*.debug=false"
 
   build:
     needs: test
