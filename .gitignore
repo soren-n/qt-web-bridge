@@ -205,3 +205,10 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Project-specific
+# Temporary WebView content files
+src/qt_webview_bridge/temp/webview_content.html
+
+# Pre-commit hooks cache
+.pre-commit-hooks-cache/

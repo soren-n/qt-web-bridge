@@ -1,0 +1,56 @@
+# Pre-commit hooks for qt-webview-bridge
+# Install with: pre-commit install
+# Run manually with: pre-commit run --all-files
+
+repos:
+  # Ruff for linting and formatting (replaces flake8, black, isort)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.8
+    hooks:
+      # Run the linter
+      - id: ruff
+        args: [--fix]
+        types_or: [python, pyi]
+      # Run the formatter  
+      - id: ruff-format
+        types_or: [python, pyi]
+
+  # MyPy for static type checking
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.7.1
+    hooks:
+      - id: mypy
+        files: ^src/
+        args: [--config-file=pyproject.toml]
+        additional_dependencies:
+          - qtpy>=2.0.0
+          - types-setuptools
+
+  # Built-in pre-commit hooks for basic file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: \.md$
+      - id: end-of-file-fixer
+        exclude: \.md$
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: debug-statements
+
+  # Run tests before commit (optional - can be slow)
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        entry: pytest
+        language: system
+        types: [python]
+        pass_filenames: false
+        # Only run if test files changed or if source files changed
+        files: ^(tests/.*|src/.*\.py)$
+        stages: [manual]  # Only run when explicitly called, not on every commit
