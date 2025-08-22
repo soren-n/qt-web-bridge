@@ -47,3 +47,9 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         git_committer_name: "github-actions[bot]"
         git_committer_email: "github-actions[bot]@users.noreply.github.com"
+
+  publish:
+    needs: release
+    if: needs.release.outputs.released == 'true'
+    uses: ./.github/workflows/publish.yml
+    secrets: inherit
