@@ -80,10 +80,9 @@ jobs:
         DISPLAY: :99
         CI: true
 
-    - name: Run additional tests (allow failures)
+    - name: Run utility tests
       run: |
-        uv run pytest tests/test_utils.py --verbose --timeout=60 || echo "Some utility tests may be skipped due to environment constraints"
-      continue-on-error: true
+        uv run pytest tests/test_utils.py --verbose --timeout=60
       env:
         QT_QPA_PLATFORM: offscreen
         DISPLAY: :99
