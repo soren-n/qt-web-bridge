@@ -86,10 +86,7 @@ jobs:
         echo "=== Running bridge tests ==="
         echo "QT_QPA_PLATFORM: ${QT_QPA_PLATFORM}"
         echo "DISPLAY: ${DISPLAY}"
-        # Try tests with retry on failure for flaky Qt initialization
-        uv run pytest tests/test_bridge.py --verbose --timeout=120 -s || \
-        (echo "First attempt failed, retrying..." && sleep 5 && \
-         uv run pytest tests/test_bridge.py --verbose --timeout=120 -s)
+        uv run pytest tests/test_bridge.py --verbose --timeout=120 -s
       env:
         QT_QPA_PLATFORM: ${{ runner.os == 'Linux' && 'offscreen' || 'minimal' }}
         DISPLAY: ${{ runner.os == 'Linux' && ':99' || '' }}
