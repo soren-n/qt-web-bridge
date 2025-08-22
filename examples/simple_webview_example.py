@@ -9,9 +9,10 @@ to create a clean WebView widget for hosting web content.
 import sys
 
 try:
-    from qt_web_bridge import create_simple_webview
     from qtpy.QtCore import QTimer
     from qtpy.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
+
+    from qt_web_bridge import create_simple_webview
 except ImportError as e:
     print(f"Required packages not available: {e}")
     print("Install with: pip install soren-n-qt-web-bridge[examples]")
