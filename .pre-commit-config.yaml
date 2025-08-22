@@ -11,20 +11,20 @@ repos:
       - id: ruff
         args: [--fix]
         types_or: [python, pyi]
-      # Run the formatter  
+      # Run the formatter
       - id: ruff-format
         types_or: [python, pyi]
 
-  # MyPy for static type checking
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.7.1
-    hooks:
-      - id: mypy
-        files: ^src/
-        args: [--config-file=pyproject.toml]
-        additional_dependencies:
-          - qtpy>=2.0.0
-          - types-setuptools
+  # MyPy for static type checking (run manually due to Qt import issues)
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: v1.7.1
+  #   hooks:
+  #     - id: mypy
+  #       files: ^src/
+  #       args: [--config-file=pyproject.toml]
+  #       additional_dependencies:
+  #         - qtpy>=2.0.0
+  #         - types-setuptools
 
   # Built-in pre-commit hooks for basic file checks
   - repo: https://github.com/pre-commit/pre-commit-hooks

@@ -213,7 +213,11 @@ class CleanWebView(QWidget):
 
     def get_url(self) -> str:
         """Get current WebView URL."""
-        return self.web_view.url().toString()
+        try:
+            url = self.web_view.url()
+            return str(url.toString()) if url else ""
+        except Exception:
+            return ""
 
     def set_user_agent(self, user_agent: str) -> None:
         """Set custom user agent string."""
@@ -221,9 +225,9 @@ class CleanWebView(QWidget):
 
     def enable_dev_tools(self, enable: bool = True) -> None:
         """Enable or disable developer tools (F12)."""
-        settings = self.web_view.page().settings()
         # Note: This requires WebEngineSettings attribute for dev tools
         # Implementation depends on Qt version and availability
+        # settings = self.web_view.page().settings()
         pass
 
     def get_web_engine_view(self) -> QWebEngineView:

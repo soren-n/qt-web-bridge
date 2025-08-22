@@ -16,7 +16,7 @@ class WebViewPanel(QWidget):
 
     This class provides:
     - Integration with host application panel systems
-    - Optional title bars and controls  
+    - Optional title bars and controls
     - Clean lifecycle management
     - Zero styling conflicts with host UI
 
@@ -58,7 +58,9 @@ class WebViewPanel(QWidget):
         """
         if self.webview:
             # Remove existing webview
-            self.layout().removeWidget(self.webview)
+            layout = self.layout()
+            if layout is not None:
+                layout.removeWidget(self.webview)
             self.webview.setParent(None)
 
         # Create new webview
@@ -66,7 +68,9 @@ class WebViewPanel(QWidget):
         self.webview.set_web_content(content_path, dev_html)
 
         # Add to layout
-        self.layout().addWidget(self.webview)
+        layout = self.layout()
+        if layout is not None:
+            layout.addWidget(self.webview)
 
         return self.webview
 

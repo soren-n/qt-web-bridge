@@ -69,7 +69,7 @@ target-version = "py311"
 [tool.ruff.lint]
 select = [
     "E",   # pycodestyle errors
-    "W",   # pycodestyle warnings  
+    "W",   # pycodestyle warnings
     "F",   # pyflakes
     "I",   # isort
     "B",   # flake8-bugbear
@@ -92,6 +92,14 @@ check_untyped_defs = true
 
 [[tool.mypy.overrides]]
 module = "qtpy.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "PySide6.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "PyQt6.*"
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

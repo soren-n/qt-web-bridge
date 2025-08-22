@@ -31,8 +31,8 @@ The pre-commit hooks will automatically run these checks before each commit:
 - **Import Sorting**: Organizes imports in the standard order
 
 ### MyPy (Type Checking)  
-- Validates type annotations in the `src/` directory
-- Ensures type safety and catches potential runtime errors
+- Run manually with `mypy src/` (not in pre-commit due to Qt import issues)
+- Validates type annotations and ensures type safety
 
 ### File Quality Checks
 - Removes trailing whitespace

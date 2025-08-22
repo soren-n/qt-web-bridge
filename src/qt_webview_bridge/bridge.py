@@ -56,7 +56,8 @@ class WebViewBridge(QObject):
     def _safe_json_loads(self, json_str: str) -> dict[str, Any]:
         """Safely deserialize JSON string to Python object."""
         try:
-            return json.loads(json_str)
+            result = json.loads(json_str)
+            return result if isinstance(result, dict) else {}
         except (TypeError, ValueError) as e:
             self._emit_error(f"JSON parsing error: {e}")
             return {}
@@ -112,7 +113,9 @@ class DataBridge(WebViewBridge):
     def set_items(self, items: list[dict[str, Any]]) -> None:
         """Set items and notify frontend."""
         self._items = items
-        self._items_by_id = {item.get("id"): item for item in items if item.get("id")}
+        self._items_by_id = {
+            str(item["id"]): item for item in items if item.get("id") is not None
+        }
 
         items_json = self._safe_json_dumps(items)
         self.items_loaded.emit(items_json)
@@ -167,10 +170,10 @@ class DataBridge(WebViewBridge):
         if "id" in item:
             self._items.append(item)
             self._items_by_id[item["id"]] = item
-            
+
             item_json = self._safe_json_dumps(item)
             self.item_updated.emit(item["id"], item_json)
-            
+
             # Refresh full list
             self.set_items(self._items)
 
@@ -179,10 +182,10 @@ class DataBridge(WebViewBridge):
         if item_id in self._items_by_id:
             # Remove from dict
             del self._items_by_id[item_id]
-            
+
             # Remove from list
             self._items = [item for item in self._items if item.get("id") != item_id]
-            
+
             # Refresh full list
             self.set_items(self._items)
         else:

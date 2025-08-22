@@ -6,6 +6,7 @@ debugging, and integration with various Qt applications.
 """
 
 import warnings
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -13,7 +14,6 @@ from qtpy.QtCore import QObject
 from qtpy.QtWidgets import QWidget
 
 from .bridge import ActionBridge, DataBridge, WebViewBridge
-from .panel import WebViewPanel
 from .webview import CleanWebView
 
 
@@ -87,7 +87,8 @@ def create_data_webview(
 
 
 def create_action_webview(
-    content_path: str, action_handlers: dict[str, callable] | None = None
+    content_path: str,
+    action_handlers: dict[str, Callable[[dict[str, Any]], Any]] | None = None,
 ) -> tuple[CleanWebView, ActionBridge]:
     """
     Create a WebView with a pre-configured ActionBridge.
@@ -102,7 +103,7 @@ def create_action_webview(
     Example:
         def handle_download(params):
             return {"status": "downloaded", "file": params["file"]}
-        
+
         handlers = {"download": handle_download}
         webview, bridge = create_action_webview("./dist", handlers)
         webview.load_content()
@@ -140,18 +141,18 @@ def detect_qt_styling_conflicts(widget: QWidget) -> list[str]:
     # Check for custom stylesheets that might affect WebViews
     if hasattr(widget, "styleSheet") and widget.styleSheet():
         stylesheet = widget.styleSheet()
-        
+
         # Check for global selectors that could affect WebViews
         if "QWidget" in stylesheet:
             warnings_list.append(
                 "Global QWidget stylesheet detected - may conflict with WebView styling"
             )
-        
+
         if "background-color" in stylesheet.lower():
             warnings_list.append(
                 "Background color styles detected - may conflict with WebView content"
             )
-            
+
         if "font" in stylesheet.lower():
             warnings_list.append(
                 "Font styles detected - may conflict with WebView typography"
@@ -162,9 +163,7 @@ def detect_qt_styling_conflicts(widget: QWidget) -> list[str]:
     depth = 0
     while parent and depth < 10:  # Avoid infinite loops
         if hasattr(parent, "styleSheet") and parent.styleSheet():
-            warnings_list.append(
-                f"Parent widget at depth {depth} has custom styling"
-            )
+            warnings_list.append(f"Parent widget at depth {depth} has custom styling")
         parent = parent.parent()
         depth += 1
 
@@ -217,7 +216,9 @@ def validate_web_content_path(content_path: str | Path) -> tuple[bool, list[str]
     try:
         file_count = len(list(path.rglob("*")))
         if file_count > 10000:
-            issues.append(f"Very large number of files ({file_count}) - may cause performance issues")
+            issues.append(
+                f"Very large number of files ({file_count}) - may cause performance issues"
+            )
     except (OSError, PermissionError):
         issues.append("Could not enumerate files in content directory")
 
@@ -241,7 +242,7 @@ def setup_development_webview(
     Example:
         html = '''<!DOCTYPE html>
         <html><body><h1>Test UI</h1></body></html>'''
-        
+
         webview = setup_development_webview(html, {"api": my_bridge})
         webview.load_content()
     """
@@ -268,12 +269,10 @@ def warn_about_styling_conflicts(widget: QWidget) -> None:
         webview = CleanWebView(main_window)
     """
     conflicts = detect_qt_styling_conflicts(widget)
-    
+
     for conflict in conflicts:
         warnings.warn(
-            f"Potential WebView styling conflict: {conflict}",
-            UserWarning,
-            stacklevel=2
+            f"Potential WebView styling conflict: {conflict}", UserWarning, stacklevel=2
         )
 
 
@@ -293,14 +292,14 @@ def create_debug_webview(content_path: str) -> CleanWebView:
     """
     webview = CleanWebView()
     webview.set_web_content(content_path)
-    
+
     # Create debug bridge
     debug_bridge = WebViewBridge()
-    
-    def debug_callback():
+
+    def debug_callback() -> None:
         print(f"[DEBUG] WebView loaded: {webview.get_url()}")
-    
+
     webview.add_load_callback(debug_callback)
     webview.register_bridge_object("debug", debug_bridge)
-    
+
     return webview

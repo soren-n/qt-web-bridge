@@ -4,7 +4,7 @@ Setup script for git hooks in qt-webview-bridge project.
 
 This script installs and configures pre-commit hooks for:
 - Ruff (linting and formatting)
-- MyPy (type checking) 
+- MyPy (type checking)
 - Basic file checks (trailing whitespace, etc.)
 - Optional pytest (manual trigger)
 
@@ -21,7 +21,7 @@ def run_command(cmd, description="", check=True):
     """Run a command and print the result."""
     print(f"\n🔧 {description}")
     print(f"Running: {' '.join(cmd)}")
-    
+
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, check=check)
         if result.stdout:
@@ -47,43 +47,56 @@ def check_python_version():
         print(f"❌ Python {version.major}.{version.minor} is not supported.")
         print("This project requires Python 3.11 or higher.")
         sys.exit(1)
-    
-    print(f"✅ Python {version.major}.{version.minor}.{version.micro} is compatible")
+
+    print(f"Python {version.major}.{version.minor}.{version.micro} is compatible")
 
 
 def install_pre_commit():
     """Install pre-commit if not already installed."""
     try:
-        result = run_command([sys.executable, "-c", "import pre_commit"], 
-                           "Checking if pre-commit is installed", check=False)
+        result = run_command(
+            [sys.executable, "-c", "import pre_commit"],
+            "Checking if pre-commit is installed",
+            check=False,
+        )
         if result.returncode == 0:
             print("✅ pre-commit is already installed")
             return
-    except:
+    except Exception:
         pass
-    
+
     print("📦 Installing pre-commit...")
-    run_command([sys.executable, "-m", "pip", "install", "pre-commit>=3.0.0"],
-                "Installing pre-commit framework")
+    run_command(
+        [sys.executable, "-m", "pip", "install", "pre-commit>=3.0.0"],
+        "Installing pre-commit framework",
+    )
 
 
 def setup_hooks():
     """Set up the pre-commit hooks."""
     print("🎣 Installing pre-commit hooks...")
-    run_command([sys.executable, "-m", "pre_commit", "install"],
-                "Installing pre-commit git hooks")
-    
+    run_command(
+        [sys.executable, "-m", "pre_commit", "install"],
+        "Installing pre-commit git hooks",
+    )
+
     print("🎣 Installing pre-commit hooks for push (optional)...")
-    run_command([sys.executable, "-m", "pre_commit", "install", "--hook-type", "pre-push"],
-                "Installing pre-push hooks", check=False)
+    run_command(
+        [sys.executable, "-m", "pre_commit", "install", "--hook-type", "pre-push"],
+        "Installing pre-push hooks",
+        check=False,
+    )
 
 
 def test_hooks():
     """Test the hooks on all files."""
     print("🧪 Testing hooks on all files...")
-    result = run_command([sys.executable, "-m", "pre_commit", "run", "--all-files"],
-                        "Running pre-commit on all files", check=False)
-    
+    result = run_command(
+        [sys.executable, "-m", "pre_commit", "run", "--all-files"],
+        "Running pre-commit on all files",
+        check=False,
+    )
+
     if result.returncode == 0:
         print("✅ All hooks passed!")
     else:
@@ -94,27 +107,27 @@ def test_hooks():
 
 def main():
     """Main setup function."""
-    print("🚀 Setting up git hooks for qt-webview-bridge")
+    print("Setting up git hooks for qt-webview-bridge")
     print("=" * 50)
-    
+
     # Check if we're in a git repository
     if not Path(".git").exists():
         print("❌ Not in a git repository!")
         print("Please run this script from the project root.")
         sys.exit(1)
-    
+
     # Check if pre-commit config exists
     if not Path(".pre-commit-config.yaml").exists():
         print("❌ .pre-commit-config.yaml not found!")
         print("Please ensure the pre-commit configuration file exists.")
         sys.exit(1)
-    
+
     try:
         check_python_version()
         install_pre_commit()
         setup_hooks()
         test_hooks()
-        
+
         print("\n" + "=" * 50)
         print("🎉 Git hooks setup complete!")
         print("\nHooks will now run automatically on git commit.")
@@ -125,7 +138,7 @@ def main():
         print("  pre-commit run pytest --hook-stage manual  # Run tests")
         print("  pre-commit autoupdate         # Update hook versions")
         print("  pre-commit uninstall          # Remove hooks")
-        
+
     except KeyboardInterrupt:
         print("\n❌ Setup interrupted by user")
         sys.exit(1)
