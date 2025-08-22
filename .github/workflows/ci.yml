@@ -38,12 +38,35 @@ jobs:
 
     - name: Install dependencies
       run: |
+        echo "=== Installing dependencies ==="
         uv sync --group dev
+        echo "=== Verifying installation ==="
+        uv list | grep ruff || echo "Ruff not found in installation"
+
+    - name: Debug environment
+      run: |
+        echo "=== Environment Info ==="
+        echo "OS: ${{ runner.os }}"
+        echo "Python: ${{ matrix.python-version }}"
+        uv run ruff --version || echo "Ruff not available"
+        echo "=== Dependency versions ==="
+        uv run python -c "import sys; print(f'Python: {sys.version}')"
 
     - name: Run linting
       run: |
-        uv run ruff check .
-        uv run ruff format --check .
+        echo "=== Running ruff check ==="
+        uv run ruff check . --verbose
+        echo "=== Running ruff format check ==="
+        uv run ruff format --check . --verbose
+
+    - name: Fix import issues if needed (CI environment)
+      if: failure()
+      run: |
+        echo "=== Attempting to fix import issues ==="
+        uv run ruff check . --fix --verbose
+        echo "=== Re-running checks after fix ==="
+        uv run ruff check . --verbose
+        uv run ruff format --check . --verbose
 
     - name: Run type checking
       run: |
