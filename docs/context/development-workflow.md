@@ -138,7 +138,7 @@ check_quality() {
 ```
 tests/
 ├── __init__.py
-├── test_webview.py        # CleanWebView functionality
+├── test_webview.py        # BridgedWebView functionality
 ├── test_bridge.py         # Bridge communication
 ├── test_utils.py          # Utility functions
 ├── test_panel.py          # WebViewPanel wrapper
@@ -151,7 +151,7 @@ tests/
 ```python
 import pytest
 from qtpy.QtWidgets import QApplication
-from qt_webview_bridge import CleanWebView
+from qt_webview_bridge import BridgedWebView
 
 @pytest.fixture
 def app():
@@ -160,7 +160,7 @@ def app():
 
 def test_webview_creation(qtbot, app):
     """Test WebView widget creation."""
-    webview = CleanWebView()
+    webview = BridgedWebView()
     qtbot.addWidget(webview)
     
     assert webview is not None
@@ -189,7 +189,7 @@ def test_bridge_json_communication():
 ```python
 def test_full_webview_bridge_integration(qtbot, app):
     """Test complete WebView + Bridge integration."""
-    webview = CleanWebView()
+    webview = BridgedWebView()
     bridge = DataBridge()
     
     qtbot.addWidget(webview)

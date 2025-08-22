@@ -7,7 +7,7 @@ between the core WebView functionality and application-specific features.
 
 from qtpy.QtWidgets import QVBoxLayout, QWidget
 
-from .webview import CleanWebView
+from .webview import BridgedWebView
 
 
 class WebViewPanel(QWidget):
@@ -30,7 +30,7 @@ class WebViewPanel(QWidget):
         super().__init__(parent)
 
         self.title = title
-        self.webview: CleanWebView | None = None
+        self.webview: BridgedWebView | None = None
 
         # Setup with zero styling to avoid host conflicts
         self._setup_ui()
@@ -45,7 +45,7 @@ class WebViewPanel(QWidget):
 
     def setup_webview(
         self, content_path: str, dev_html: str | None = None
-    ) -> CleanWebView:
+    ) -> BridgedWebView:
         """
         Create and setup the WebView component.
 
@@ -64,7 +64,7 @@ class WebViewPanel(QWidget):
             self.webview.setParent(None)
 
         # Create new webview
-        self.webview = CleanWebView(self)
+        self.webview = BridgedWebView(self)
         self.webview.set_web_content(content_path, dev_html)
 
         # Add to layout
@@ -81,7 +81,7 @@ class WebViewPanel(QWidget):
         else:
             raise RuntimeError("WebView not setup. Call setup_webview() first.")
 
-    def get_webview(self) -> CleanWebView | None:
+    def get_webview(self) -> BridgedWebView | None:
         """Get the WebView instance."""
         return self.webview
 

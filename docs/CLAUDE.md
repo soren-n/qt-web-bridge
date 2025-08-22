@@ -65,7 +65,7 @@ This package provides Qt WebView widgets that host modern web UIs without Qt sty
 
 ### Core Components Architecture
 
-**CleanWebView** (`src/qt_webview_bridge/webview.py`)
+**BridgedWebView** (`src/qt_webview_bridge/webview.py`)
 - Primary WebView widget with zero Qt stylesheet interference
 - Manages QWebEngineView with transparent zero-margin layouts
 - Handles content loading priority: production build → dev HTML → inline content

@@ -1,9 +1,9 @@
 """
-Clean WebView widget for hosting TypeScript UIs with zero Qt styling conflicts.
+Bridged WebView widget for hosting TypeScript UIs with integrated Python-JavaScript bridge.
 
-This component provides a minimal WebView that:
+This component provides a WebView with seamless bridge functionality that:
 1. Never applies Qt stylesheets that could conflict with host applications
-2. Provides clean Python-JavaScript communication via WebChannel
+2. Provides integrated Python-JavaScript communication via WebChannel
 3. Handles development vs production web content loading
 4. Is fully reusable across different projects and contexts
 """
@@ -18,19 +18,19 @@ from qtpy.QtWebEngineWidgets import QWebEngineView
 from qtpy.QtWidgets import QVBoxLayout, QWidget
 
 
-class CleanWebView(QWidget):
+class BridgedWebView(QWidget):
     """
-    Clean WebView widget for hosting TypeScript UIs.
+    Bridged WebView widget for hosting TypeScript UIs with integrated bridge functionality.
 
     Key Features:
     - Zero Qt styling to avoid conflicts with host applications
-    - Clean Python-JavaScript bridge via WebChannel
+    - Integrated Python-JavaScript bridge via WebChannel
     - Support for both development and production web content
     - Fully reusable across projects
-    - Minimal API surface
+    - Minimal API surface focused on bridging
 
     Usage:
-        webview = CleanWebView()
+        webview = BridgedWebView()
         webview.set_web_content("path/to/dist", dev_html="dev.html")
         webview.register_bridge_object("api", my_bridge_object)
         webview.load_content()

@@ -13,10 +13,10 @@ Key Features:
 - Minimal API surface for easy integration
 
 Basic Usage:
-    from qt_webview_bridge import CleanWebView, WebViewBridge
+    from qt_webview_bridge import BridgedWebView, WebViewBridge
 
     # Create webview widget
-    webview = CleanWebView()
+    webview = BridgedWebView()
     webview.set_web_content("path/to/web/dist")
 
     # Setup Python-JavaScript bridge
@@ -45,11 +45,11 @@ __email__ = "your.email@example.com"
 from .bridge import ActionBridge, DataBridge, WebViewBridge
 from .panel import WebViewPanel
 from .utils import create_simple_webview, detect_qt_styling_conflicts
-from .webview import CleanWebView
+from .webview import BridgedWebView
 
 __all__ = [
     # Core components
-    "CleanWebView",
+    "BridgedWebView",
     "WebViewBridge",
     "DataBridge",
     "ActionBridge",

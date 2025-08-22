@@ -31,7 +31,7 @@ pip install qt-webview-bridge[examples]
 
 ```python
 from qtpy.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
-from qt_webview_bridge import CleanWebView
+from qt_webview_bridge import BridgedWebView
 
 app = QApplication([])
 
@@ -42,7 +42,7 @@ window.setCentralWidget(central_widget)
 layout = QVBoxLayout(central_widget)
 
 # Create and setup WebView
-webview = CleanWebView()
+webview = BridgedWebView()
 webview.set_web_content("path/to/your/web/dist")
 layout.addWidget(webview)
 
@@ -56,10 +56,10 @@ app.exec()
 ### With Python-JavaScript Bridge
 
 ```python
-from qt_webview_bridge import CleanWebView, DataBridge, ActionBridge
+from qt_webview_bridge import BridgedWebView, DataBridge, ActionBridge
 
 # Create WebView
-webview = CleanWebView()
+webview = BridgedWebView()
 webview.set_web_content("web-content")
 
 # Create bridges
@@ -132,7 +132,7 @@ webview.load_content()
 
 ## 🔧 Core Components
 
-### `CleanWebView`
+### `BridgedWebView`
 Main WebView widget with zero Qt styling interference.
 
 ### `WebViewBridge`

@@ -24,11 +24,11 @@ from qtpy.QtWidgets import QWidget, QVBoxLayout
 
 # Local imports
 from .bridge import WebViewBridge
-from .webview import CleanWebView
+from .webview import BridgedWebView
 ```
 
 ### Naming Conventions
-- **Classes**: PascalCase (`CleanWebView`, `DataBridge`)
+- **Classes**: PascalCase (`BridgedWebView`, `DataBridge`)
 - **Functions/Methods**: snake_case (`set_web_content`, `load_content`)
 - **Constants**: UPPER_SNAKE_CASE (`__version__`, `__all__`)
 - **Private Members**: Leading underscore (`_setup_ui`, `_bridge_objects`)

@@ -11,7 +11,7 @@
 │  ┌─────────────────────────────────────────────────────────┐ │
 │  │                  WebViewPanel                           │ │
 │  │  ┌───────────────────────────────────────────────────┐  │ │
-│  │  │                CleanWebView                       │  │ │
+│  │  │               BridgedWebView                      │  │ │
 │  │  │  ┌─────────────────────────────────────────────┐  │  │ │
 │  │  │  │            QWebEngineView                   │  │  │ │
 │  │  │  │                    │                        │  │  │ │
@@ -39,7 +39,7 @@
 
 ## Core Components
 
-### 1. CleanWebView (`webview.py`)
+### 1. BridgedWebView (`webview.py`)
 **Purpose**: Primary WebView widget with zero styling conflicts
 
 **Key Responsibilities**:
@@ -56,7 +56,7 @@
 
 **Integration Points**:
 ```python
-webview = CleanWebView()
+webview = BridgedWebView()
 webview.set_web_content("path/to/dist")  # Production build
 webview.set_dev_html_content(html_str)   # Development content
 webview.register_bridge_object("api", bridge)
@@ -170,7 +170,7 @@ bridge.py
 └── (standalone, minimal Qt dependencies)
 
 panel.py
-├── webview.py (for CleanWebView)
+├── webview.py (for BridgedWebView)
 └── bridge.py (for type hints)
 
 utils.py
@@ -213,7 +213,7 @@ class CustomBridge(WebViewBridge):
 
 ### Content Loading Extensions
 ```python
-class ExtendedWebView(CleanWebView):
+class ExtendedWebView(BridgedWebView):
     def load_content(self) -> None:
         # Custom loading logic
         if self._try_custom_content_source():
@@ -276,7 +276,7 @@ Trusted Zone              Boundary                 Untrusted Zone
 
 ### Unit Testing (`tests/`)
 ```
-test_webview.py     → CleanWebView functionality
+test_webview.py     → BridgedWebView functionality
 test_bridge.py      → Bridge communication patterns
 test_utils.py       → Utility function validation
 test_integration.py → Full component integration

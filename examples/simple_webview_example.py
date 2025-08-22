@@ -37,7 +37,7 @@ class SimpleWebViewWindow(QMainWindow):
         self.webview = create_simple_webview(".")  # Load from current directory
 
         # Or create manually:
-        # self.webview = CleanWebView()
+        # self.webview = BridgedWebView()
         # self.webview.set_web_content("./web-content")
 
         layout.addWidget(self.webview)

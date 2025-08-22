@@ -14,14 +14,14 @@ from qtpy.QtCore import QObject
 from qtpy.QtWidgets import QWidget
 
 from .bridge import ActionBridge, DataBridge, WebViewBridge
-from .webview import CleanWebView
+from .webview import BridgedWebView
 
 
 def create_simple_webview(
     content_path: str,
     bridge_objects: dict[str, QObject] | None = None,
     parent: QWidget | None = None,
-) -> CleanWebView:
+) -> BridgedWebView:
     """
     Create a simple WebView with optional bridge objects.
 
@@ -31,7 +31,7 @@ def create_simple_webview(
         parent: Optional parent widget
 
     Returns:
-        Configured CleanWebView ready to load content
+        Configured BridgedWebView ready to load content
 
     Example:
         # Simple usage
@@ -46,7 +46,7 @@ def create_simple_webview(
         )
         webview.load_content()
     """
-    webview = CleanWebView(parent)
+    webview = BridgedWebView(parent)
     webview.set_web_content(content_path)
 
     if bridge_objects:
@@ -58,7 +58,7 @@ def create_simple_webview(
 
 def create_data_webview(
     content_path: str, initial_data: list[dict[str, Any]] | None = None
-) -> tuple[CleanWebView, DataBridge]:
+) -> tuple[BridgedWebView, DataBridge]:
     """
     Create a WebView with a pre-configured DataBridge.
 
@@ -74,7 +74,7 @@ def create_data_webview(
         webview, bridge = create_data_webview("./dist", items)
         webview.load_content()
     """
-    webview = CleanWebView()
+    webview = BridgedWebView()
     webview.set_web_content(content_path)
 
     data_bridge = DataBridge()
@@ -89,7 +89,7 @@ def create_data_webview(
 def create_action_webview(
     content_path: str,
     action_handlers: dict[str, Callable[[dict[str, Any]], Any]] | None = None,
-) -> tuple[CleanWebView, ActionBridge]:
+) -> tuple[BridgedWebView, ActionBridge]:
     """
     Create a WebView with a pre-configured ActionBridge.
 
@@ -108,7 +108,7 @@ def create_action_webview(
         webview, bridge = create_action_webview("./dist", handlers)
         webview.load_content()
     """
-    webview = CleanWebView()
+    webview = BridgedWebView()
     webview.set_web_content(content_path)
 
     action_bridge = ActionBridge()
@@ -228,7 +228,7 @@ def validate_web_content_path(content_path: str | Path) -> tuple[bool, list[str]
 
 def setup_development_webview(
     html_content: str, bridge_objects: dict[str, QObject] | None = None
-) -> CleanWebView:
+) -> BridgedWebView:
     """
     Setup a WebView for development with inline HTML content.
 
@@ -237,7 +237,7 @@ def setup_development_webview(
         bridge_objects: Optional bridge objects
 
     Returns:
-        Configured CleanWebView ready to load
+        Configured BridgedWebView ready to load
 
     Example:
         html = '''<!DOCTYPE html>
@@ -246,7 +246,7 @@ def setup_development_webview(
         webview = setup_development_webview(html, {"api": my_bridge})
         webview.load_content()
     """
-    webview = CleanWebView()
+    webview = BridgedWebView()
     webview.set_dev_html_content(html_content)
 
     if bridge_objects:
@@ -266,7 +266,7 @@ def warn_about_styling_conflicts(widget: QWidget) -> None:
     Example:
         # Check for conflicts before adding WebView
         warn_about_styling_conflicts(main_window)
-        webview = CleanWebView(main_window)
+        webview = BridgedWebView(main_window)
     """
     conflicts = detect_qt_styling_conflicts(widget)
 
@@ -276,7 +276,7 @@ def warn_about_styling_conflicts(widget: QWidget) -> None:
         )
 
 
-def create_debug_webview(content_path: str) -> CleanWebView:
+def create_debug_webview(content_path: str) -> BridgedWebView:
     """
     Create a WebView with debug logging enabled.
 
@@ -290,7 +290,7 @@ def create_debug_webview(content_path: str) -> CleanWebView:
         webview = create_debug_webview("./web-dist")
         webview.load_content()  # Will log debug info
     """
-    webview = CleanWebView()
+    webview = BridgedWebView()
     webview.set_web_content(content_path)
 
     # Create debug bridge

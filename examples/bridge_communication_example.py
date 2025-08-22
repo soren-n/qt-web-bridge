@@ -11,7 +11,7 @@ import sys
 from typing import Any
 
 try:
-    from qt_webview_bridge import ActionBridge, CleanWebView, DataBridge
+    from qt_webview_bridge import ActionBridge, BridgedWebView, DataBridge
     from qtpy.QtCore import QTimer, Slot
     from qtpy.QtWidgets import (
         QApplication,
@@ -164,7 +164,7 @@ class BridgeCommunicationWindow(QMainWindow):
         layout.addLayout(button_layout)
 
         # WebView
-        self.webview = CleanWebView()
+        self.webview = BridgedWebView()
         layout.addWidget(self.webview)
 
     def setup_webview(self):
