@@ -11,7 +11,7 @@ import sys
 from typing import Any
 
 try:
-    from qt_webview_bridge import ActionBridge, BridgedWebView, DataBridge
+    from qt_web_bridge import ActionBridge, BridgedWebView, DataBridge
     from qtpy.QtCore import QTimer, Slot
     from qtpy.QtWidgets import (
         QApplication,
@@ -22,7 +22,7 @@ try:
     )
 except ImportError as e:
     print(f"Required packages not available: {e}")
-    print("Install with: pip install qt-webview-bridge[examples]")
+    print("Install with: pip install soren-n-qt-web-bridge[examples]")
     sys.exit(1)
 
 

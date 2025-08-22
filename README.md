@@ -1,7 +1,7 @@
-# Qt WebView Bridge
+# Soren-N Qt Web Bridge
 
-[![PyPI version](https://badge.fury.io/py/qt-webview-bridge.svg)](https://badge.fury.io/py/qt-webview-bridge)
-[![Python versions](https://img.shields.io/pypi/pyversions/qt-webview-bridge.svg)](https://pypi.org/project/qt-webview-bridge/)
+[![PyPI version](https://badge.fury.io/py/soren-n-qt-web-bridge.svg)](https://badge.fury.io/py/soren-n-qt-web-bridge)
+[![Python versions](https://img.shields.io/pypi/pyversions/soren-n-qt-web-bridge.svg)](https://pypi.org/project/soren-n-qt-web-bridge/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Clean Qt WebView widgets for hosting modern web UIs without styling conflicts.
@@ -21,17 +21,17 @@ Clean Qt WebView widgets for hosting modern web UIs without styling conflicts.
 
 ```bash
 # Install the package
-pip install qt-webview-bridge
+pip install soren-n-qt-web-bridge
 
 # For examples and development
-pip install qt-webview-bridge[examples]
+pip install soren-n-qt-web-bridge[examples]
 ```
 
 ### Basic Usage
 
 ```python
 from qtpy.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
-from qt_webview_bridge import BridgedWebView
+from qt_web_bridge import BridgedWebView
 
 app = QApplication([])
 
@@ -56,7 +56,7 @@ app.exec()
 ### With Python-JavaScript Bridge
 
 ```python
-from qt_webview_bridge import BridgedWebView, DataBridge, ActionBridge
+from qt_web_bridge import BridgedWebView, DataBridge, ActionBridge
 
 # Create WebView
 webview = BridgedWebView()

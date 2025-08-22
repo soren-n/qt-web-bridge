@@ -1,5 +1,11 @@
 # Development Workflow and Tools
 
+## Project Identity
+- **Package Name**: `soren-n-qt-web-bridge` (PyPI)
+- **Import Name**: `qt_web_bridge` (Python)
+- **Repository**: https://github.com/soren-n/qt-web-bridge
+- **Documentation**: https://qt-web-bridge.readthedocs.io/
+
 ## Development Environment Setup
 
 ### Prerequisites
@@ -11,22 +17,19 @@
 ### Project Setup
 ```bash
 # Clone repository
-git clone <repository-url>
-cd qt-webview-bridge
+git clone https://github.com/soren-n/qt-web-bridge.git
+cd qt-web-bridge
 
-# Create virtual environment
+# Modern setup with uv (recommended)
+curl -LsSf https://astral.sh/uv/install.sh | sh  # Install uv
+uv sync --dev                                    # Install all dependencies
+uv run python -m pip install -e ".[examples]"   # Add examples
+
+# Alternative: Traditional pip setup
 python -m venv venv
-
-# Activate virtual environment
-# Windows:
-venv\Scripts\activate
-# macOS/Linux:
-source venv/bin/activate
-
-# Install development dependencies
+venv\Scripts\activate  # Windows
+source venv/bin/activate  # macOS/Linux
 pip install -e ".[dev]"
-
-# Install examples dependencies (optional)
 pip install -e ".[examples]"
 ```
 
@@ -201,21 +204,129 @@ def test_full_webview_bridge_integration(qtbot, app):
 
 ### Test Execution
 ```bash
-# Run all tests
-pytest
+# Modern uv commands (recommended)
+uv run pytest                                    # Run all tests
+uv run pytest tests/test_webview.py             # Run specific file
+uv run pytest --cov=src/qt_web_bridge          # With coverage
+uv run pytest -v                                # Verbose output
+uv run pytest tests/test_bridge.py::test_data_bridge_functionality  # Specific test
 
-# Run specific test file
-pytest tests/test_webview.py
-
-# Run with coverage
-pytest --cov=src/qt_webview_bridge
-
-# Run with verbose output
-pytest -v
-
-# Run specific test
-pytest tests/test_bridge.py::test_data_bridge_functionality
+# Traditional commands
+pytest                                           # Run all tests
+pytest tests/test_webview.py                   # Run specific file  
+pytest --cov=src/qt_web_bridge                 # With coverage
+pytest -v                                       # Verbose output
+pytest tests/test_bridge.py::test_data_bridge_functionality  # Specific test
 ```
+
+## CI/CD and Release Workflow
+
+### GitHub Actions Pipeline
+
+The project uses automated CI/CD with GitHub Actions:
+
+#### Continuous Integration (CI)
+**Trigger**: Push/PR to main branch
+**File**: `.github/workflows/ci.yml`
+
+```bash
+# Automated on every push/PR:
+1. Multi-platform testing (Ubuntu, Windows, macOS)
+2. Python version matrix (3.11, 3.12)  
+3. Quality checks:
+   - uv run ruff check .
+   - uv run ruff format --check .
+   - uv run mypy src/
+   - uv run pytest
+4. Package build validation
+```
+
+#### Continuous Deployment (CD)  
+**Trigger**: Git tag `v*` (e.g., `v0.1.0`)
+**File**: `.github/workflows/publish.yml`
+
+```bash
+# Automated on version tags:
+1. Build package (soren_n_qt_web_bridge-X.Y.Z.tar.gz)
+2. Deploy to TestPyPI (manual approval required)
+3. Deploy to PyPI (manual approval required)
+4. Generate PEP 740 attestations
+```
+
+#### Documentation Build
+**Trigger**: Push to main branch
+**Platform**: Read the Docs
+**File**: `.readthedocs.yaml`
+
+```bash
+# Automated documentation:
+1. Sphinx build with Furo theme
+2. Auto-API generation from docstrings  
+3. Deploy to https://qt-web-bridge.readthedocs.io/
+4. Multiple formats (HTML, PDF, ePub)
+```
+
+### Release Process
+
+1. **Prepare Release**
+   ```bash
+   # Update version in pyproject.toml
+   version = "0.2.0"
+   
+   # Ensure all tests pass
+   uv run pytest
+   uv run ruff check .
+   uv run mypy src/
+   ```
+
+2. **Create Release**
+   ```bash
+   # Create and push tag
+   git tag v0.2.0
+   git push origin v0.2.0
+   ```
+
+3. **Monitor Deployment**
+   - GitHub Actions automatically builds package
+   - Manual approval required for TestPyPI deployment
+   - Manual approval required for PyPI deployment
+   - Documentation rebuilds automatically
+
+### PyPI Trusted Publishing Setup
+
+**Security Features**:
+- No long-lived API tokens needed
+- OIDC-based authentication with GitHub
+- Environment-specific deployment approvals
+- Automatic attestation generation
+
+**Configuration**:
+- Repository: `soren-n/qt-web-bridge`
+- Package: `soren-n-qt-web-bridge`
+- Workflow: `publish.yml`
+- Environments: `testpypi`, `pypi`
+
+### Development Environment Management
+
+#### Using uv (Recommended)
+```bash
+# Install uv globally
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Project setup
+uv sync                          # Install all dependencies
+uv sync --dev                    # Include dev dependencies
+uv add <package>                 # Add new dependency
+uv add --dev <package>           # Add dev dependency
+uv run <command>                 # Run command in environment
+uv lock                          # Update lockfile
+```
+
+#### Benefits of uv
+- **Speed**: 10-100x faster than pip
+- **Reliability**: Reproducible builds with `uv.lock`
+- **Simplicity**: Single tool for virtual envs + package management
+- **Compatibility**: Drop-in replacement for pip/pip-tools
 
 ## Examples and Documentation
 
@@ -239,7 +350,7 @@ python scripts/test-hooks.py
 
 ### Example Development
 When creating new examples:
-1. **Self-contained**: Examples should work with just `pip install qt-webview-bridge[examples]`
+1. **Self-contained**: Examples should work with just `pip install soren-n-qt-web-bridge[examples]`
 2. **Documented**: Clear docstrings and inline comments
 3. **Educational**: Show best practices and common patterns
 4. **Visual**: Provide immediate visual feedback when run

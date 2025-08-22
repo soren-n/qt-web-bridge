@@ -6,7 +6,7 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from qt_webview_bridge.utils import (
+from qt_web_bridge.utils import (
     create_simple_webview,
     detect_qt_styling_conflicts,
     setup_development_webview,

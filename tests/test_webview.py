@@ -14,7 +14,7 @@ try:
 except ImportError:
     HAS_QT = False
 
-from qt_webview_bridge import BridgedWebView
+from qt_web_bridge import BridgedWebView
 
 
 @pytest.fixture(scope="session")

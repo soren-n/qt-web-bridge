@@ -1,7 +1,7 @@
 # Project Architecture Overview
 
 ## Project Mission
-**qt-webview-bridge** enables seamless integration of modern web UIs (React, Vue, TypeScript) into Qt desktop applications without the typical styling conflicts that plague WebView implementations. The architecture prioritizes clean separation, minimal overhead, and zero visual interference with host applications.
+**Qt Web Bridge** (package: `soren-n-qt-web-bridge`, import: `qt_web_bridge`) enables seamless integration of modern web UIs (React, Vue, TypeScript) into Qt desktop applications without the typical styling conflicts that plague WebView implementations. The architecture prioritizes clean separation, minimal overhead, and zero visual interference with host applications.
 
 ## High-Level Architecture
 
@@ -158,6 +158,92 @@ Error Level          Handler                   Recovery
 └────────────────────────────────────────────────────────┘
 ```
 
+## Development Infrastructure Architecture
+
+### Repository and Package Management
+```
+Repository: https://github.com/soren-n/qt-web-bridge
+Package: soren-n-qt-web-bridge (PyPI)
+Import: qt_web_bridge (Python)
+
+Package Structure:
+├── src/qt_web_bridge/           # Main package code
+├── tests/                       # Test suite
+├── examples/                    # Usage examples
+├── docs/                        # Documentation
+├── .github/workflows/           # CI/CD pipelines
+├── pyproject.toml              # Modern Python packaging
+└── .readthedocs.yaml           # Documentation hosting
+```
+
+### CI/CD Pipeline Architecture
+```
+GitHub Repository
+       │
+       ├─ Push/PR ──→ CI Workflow
+       │              ├─ Lint (ruff)
+       │              ├─ Type Check (mypy)
+       │              ├─ Test (pytest)
+       │              └─ Build (hatchling)
+       │
+       ├─ Tag v* ────→ CD Workflow
+       │              ├─ Build Package
+       │              ├─ TestPyPI Deploy (manual approval)
+       │              └─ PyPI Deploy (manual approval)
+       │
+       └─ Push ──────→ Docs Workflow
+                      └─ Read the Docs Build
+                         └─ https://qt-web-bridge.readthedocs.io/
+```
+
+### Security Architecture
+```
+PyPI Trusted Publishing (OIDC)
+├─ No long-lived API tokens
+├─ GitHub Actions identity verification
+├─ Environment-based deployment approval
+└─ PEP 740 attestation generation
+
+Build Security:
+├─ Isolated build environments
+├─ Dependency pinning with uv.lock
+├─ Pre-commit hooks for quality gates
+└─ Separate build/publish jobs
+```
+
+### Documentation Architecture
+```
+Read the Docs
+├─ Sphinx + Furo theme
+├─ Auto-API from docstrings
+├─ MyST parser (Markdown support)
+├─ Multiple formats (HTML/PDF/ePub)
+└─ Version management
+
+Local Development:
+├─ docs/conf.py (Sphinx config)
+├─ docs/requirements.txt (doc deps)
+├─ docs/guides/ (user guides)
+└─ docs/api/ (auto-generated)
+```
+
+### Quality Assurance Architecture
+```
+Code Quality Pipeline:
+├─ Ruff (linting + formatting)
+├─ MyPy (static type checking)
+├─ Pytest + pytest-qt (testing)
+├─ Pre-commit hooks (automated checks)
+└─ Dependabot (dependency updates)
+
+Standards:
+├─ Python 3.11+ compatibility
+├─ 88-character line length
+├─ Google-style docstrings
+├─ Comprehensive type hints
+└─ Qt styling conflict avoidance
+```
+
 ## Module Dependencies
 
 ### Internal Dependencies
@@ -292,8 +378,8 @@ test_integration.py → Full component integration
 
 ### Package Structure
 ```
-qt-webview-bridge/
-├── src/qt_webview_bridge/    # Source code
+qt-web-bridge/
+├── src/qt_web_bridge/        # Source code
 ├── tests/                    # Test suite
 ├── examples/                 # Usage examples
 ├── docs/                     # Documentation

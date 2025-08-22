@@ -1,15 +1,22 @@
 # Coding Standards and Conventions
 
 ## Project Overview
-**qt-webview-bridge** is a Python package that provides clean Qt WebView widgets for hosting modern web UIs without styling conflicts. The codebase emphasizes minimal dependencies, clean APIs, and zero Qt styling interference.
+**Qt Web Bridge** (PyPI: `soren-n-qt-web-bridge`, import: `qt_web_bridge`) is a Python package that provides clean Qt WebView widgets for hosting modern web UIs without styling conflicts. The codebase emphasizes minimal dependencies, clean APIs, and zero Qt styling interference.
+
+## Repository Information
+- **Repository**: https://github.com/soren-n/qt-web-bridge
+- **Documentation**: https://qt-web-bridge.readthedocs.io/
+- **Package**: soren-n-qt-web-bridge (PyPI)
+- **Import**: qt_web_bridge (Python)
 
 ## Python Code Standards
 
 ### Style Guidelines
 - **Line Length**: 88 characters (configured in ruff)
-- **Python Version**: Minimum 3.11, targeting 3.11-3.12
-- **Formatter**: Ruff (replaces Black + isort + flake8)
+- **Python Version**: Minimum 3.11, targeting 3.11-3.12  
+- **Formatter**: Ruff (replaces Black, isort, flake8, pyupgrade)
 - **Type Checking**: MyPy with strict typing enabled
+- **Pre-commit**: Automated quality enforcement via git hooks
 
 ### Import Organization
 ```python
@@ -109,8 +116,8 @@ def _safe_json_loads(self, json_str: str) -> dict[str, Any]:
 
 ### Project Structure
 ```
-qt-webview-bridge/
-├── src/qt_webview_bridge/    # Source code package
+qt-web-bridge/
+├── src/qt_web_bridge/        # Source code package
 │   ├── __init__.py          # Public API exports
 │   ├── webview.py          # Core WebView widget
 │   ├── bridge.py           # Bridge base classes and implementations  
@@ -121,10 +128,19 @@ qt-webview-bridge/
 ├── examples/                # Example applications
 ├── scripts/                 # Development and setup scripts
 ├── docs/                    # Documentation
-│   ├── CLAUDE.md           # Claude Code guidance
-│   ├── HOOKS-SETUP.md      # Git hooks guide
-│   └── context/            # Development context docs
+│   ├── conf.py             # Sphinx configuration
+│   ├── requirements.txt    # Documentation dependencies
+│   ├── guides/             # User guides
+│   ├── examples/           # Example documentation
+│   ├── context/            # Development context docs
+│   └── _build/             # Generated documentation
+├── .github/                 # GitHub Actions workflows
+│   └── workflows/
+│       ├── ci.yml          # Continuous Integration
+│       └── publish.yml     # PyPI publishing
 ├── pyproject.toml          # Python project configuration
+├── uv.lock                 # Locked dependencies (uv)
+├── .readthedocs.yaml       # Read the Docs configuration
 ├── README.md               # Main documentation
 ├── LICENSE                 # License file
 ├── .gitignore             # Git ignore rules
@@ -160,12 +176,32 @@ select = [
 ]
 ```
 
-### Pre-commit Checks
-Before committing code, ensure:
-1. `ruff check .` passes (linting)
-2. `ruff format .` applied (formatting)
-3. `mypy src/` passes (type checking)
-4. `pytest` passes (tests)
+### Modern Development Workflow
+
+#### Using uv (Recommended)
+```bash
+# Setup and quality checks
+uv sync                      # Install dependencies
+uv run ruff check .          # Linting
+uv run ruff format .         # Formatting
+uv run mypy src/             # Type checking
+uv run pytest               # Testing
+```
+
+#### Traditional Workflow
+```bash
+# Quality checks
+ruff check .                 # Linting  
+ruff format .                # Formatting
+mypy src/                    # Type checking
+pytest                       # Testing
+```
+
+### Automated Quality Assurance
+- **Pre-commit Hooks**: Automatic quality checks on git commit
+- **GitHub Actions**: CI/CD pipeline with matrix testing
+- **Dependabot**: Automated dependency updates
+- **Read the Docs**: Automatic documentation building
 
 ## API Design Principles
 
@@ -229,3 +265,36 @@ def setup(self, path, html=None):
 - **Input Validation**: Always validate data from JavaScript
 - **Error Information**: Don't expose sensitive information in error messages
 - **API Boundaries**: Clear separation between trusted Python and untrusted web content
+
+## CI/CD and Release Standards
+
+### Continuous Integration Requirements
+- **Multi-platform Testing**: Ubuntu, Windows, macOS
+- **Python Version Matrix**: 3.11, 3.12
+- **Quality Gate Enforcement**: All checks must pass before merge
+- **Automated Testing**: pytest with Qt widget testing
+
+### Release Process Standards
+1. **Version Bumping**: Update `pyproject.toml` version
+2. **Tag Creation**: Use semantic versioning tags (`v1.2.3`)
+3. **Automated Publishing**: GitHub Actions with OIDC trusted publishing
+4. **Manual Approvals**: Required for TestPyPI and PyPI deployments
+5. **Documentation**: Automatic rebuild on Read the Docs
+
+### Security Standards
+- **No Long-lived Tokens**: Use OIDC trusted publishing only
+- **Environment Protection**: Manual approval gates for production
+- **Attestation Generation**: PEP 740 attestations for all releases
+- **Dependency Security**: Dependabot for automated security updates
+
+### Documentation Standards
+- **API Documentation**: Auto-generated from docstrings with sphinx-autoapi
+- **User Guides**: Comprehensive guides for all major features
+- **Examples**: Working examples for common use cases
+- **Read the Docs**: Professional documentation hosting with multiple formats
+
+### Code Quality Standards
+- **Zero Warnings**: All quality tools must pass without warnings
+- **Test Coverage**: Comprehensive test coverage for public APIs
+- **Type Safety**: Full type hints for all public methods
+- **Import Organization**: Consistent import ordering with Ruff

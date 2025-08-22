@@ -1,4 +1,4 @@
-# Pre-commit hooks for qt-webview-bridge
+# Pre-commit hooks for qt-bridged-webview
 # Install with: pre-commit install
 # Run manually with: pre-commit run --all-files
 

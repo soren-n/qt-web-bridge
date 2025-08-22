@@ -13,7 +13,7 @@ Key Features:
 - Minimal API surface for easy integration
 
 Basic Usage:
-    from qt_webview_bridge import BridgedWebView, WebViewBridge
+    from qt_web_bridge import BridgedWebView, WebViewBridge
 
     # Create webview widget
     webview = BridgedWebView()
@@ -27,7 +27,7 @@ Basic Usage:
     webview.load_content()
 
 Advanced Usage:
-    from qt_webview_bridge import DataBridge, ActionBridge, WebViewPanel
+    from qt_web_bridge import DataBridge, ActionBridge, WebViewPanel
 
     # Create specialized bridges
     data_bridge = DataBridge()

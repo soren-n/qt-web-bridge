@@ -1,0 +1,37 @@
+# Read the Docs configuration file for qt-web-bridge
+# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
+
+version: 2
+
+# Build configuration
+build:
+  os: ubuntu-24.04
+  tools:
+    python: "3.12"
+  jobs:
+    post_checkout:
+      # Install uv for faster dependency resolution
+      - curl -LsSf https://astral.sh/uv/install.sh | sh
+      - export PATH="$HOME/.cargo/bin:$PATH"
+    post_install:
+      # Install the project in development mode
+      - uv pip install -e .[dev]
+
+# Sphinx configuration
+sphinx:
+  configuration: docs/conf.py
+  fail_on_warning: false
+
+# Python configuration
+python:
+  install:
+    - requirements: docs/requirements.txt
+    - method: pip
+      path: .
+      extra_requirements:
+        - dev
+
+# Build formats
+formats:
+  - pdf
+  - epub

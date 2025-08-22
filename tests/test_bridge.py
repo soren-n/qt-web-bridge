@@ -4,7 +4,7 @@ Test the bridge components.
 
 import json
 
-from qt_webview_bridge import ActionBridge, DataBridge, WebViewBridge
+from qt_web_bridge import ActionBridge, DataBridge, WebViewBridge
 
 
 def test_webview_bridge_creation():

@@ -59,14 +59,25 @@ dependencies = [
 dev = [
     "pytest>=7.0",       # Testing framework
     "pytest-qt>=4.0",    # Qt testing utilities
-    "black>=22.0",       # Code formatting (transitioning away)
-    "ruff>=0.1.0",       # Modern linting/formatting tool
+    "ruff>=0.1.0",       # Modern linting/formatting (replaces black)
     "mypy>=1.0",         # Static type checking
+    "pre-commit>=3.0.0", # Git hooks for quality enforcement
     "PySide6>=6.0",      # Development Qt implementation
 ]
 
 examples = [
     "PySide6>=6.0",      # Qt implementation for examples
+]
+
+docs = [
+    "sphinx>=8.2.3",             # Documentation generator
+    "furo>=2025.7.19",           # Modern Sphinx theme
+    "sphinx-autoapi>=3.6.0",     # Auto API documentation
+    "myst-parser>=4.0.1",        # Markdown support
+    "sphinx-copybutton>=0.5.2",  # Copy code buttons
+    "sphinx-design>=0.6.1",      # Design components
+    "sphinxext-opengraph>=0.12.0", # Open Graph metadata
+    "linkify-it-py>=2.0.3",      # Link detection
 ]
 ```
 
@@ -103,6 +114,24 @@ select = [
 - **Extensions**: pytest-qt for Qt widget testing
 - **Configuration**: Tailored for Qt application testing
 
+### Modern Development Tools
+
+#### uv (Package Manager)
+- **Version**: Latest
+- **Purpose**: Modern Python package and project management
+- **Benefits**: 
+  - 10-100x faster than pip
+  - Reproducible builds with uv.lock
+  - Single tool for virtual environments and dependencies
+  - Drop-in replacement for pip/pip-tools
+- **Usage**: Primary development workflow tool
+
+#### Pre-commit (Quality Gates)
+- **Version**: 3.0+
+- **Purpose**: Automated code quality enforcement via git hooks
+- **Configuration**: `.pre-commit-config.yaml`
+- **Hooks**: Ruff formatting/linting, MyPy type checking, basic file checks
+
 ### Build and Distribution Tools
 
 #### Hatchling (Build Backend)
@@ -113,7 +142,7 @@ select = [
 #### Package Structure
 ```toml
 [tool.hatch.build.targets.wheel]
-packages = ["src/qt_webview_bridge"]
+packages = ["src/qt_web_bridge"]
 
 [tool.hatch.build.targets.sdist]
 include = [
@@ -168,14 +197,57 @@ include = [
 ### Dependency Resolution
 ```bash
 # User installs core package
-pip install qt-webview-bridge
+pip install soren-n-qt-web-bridge
 
-# User chooses Qt implementation
+# User chooses Qt implementation  
 pip install PySide6  # or PyQt6, PySide2, PyQt5
 
-# Development setup
-pip install qt-webview-bridge[dev]
+# Modern development setup with uv
+uv sync --dev
+
+# Traditional development setup
+pip install soren-n-qt-web-bridge[dev]
 ```
+
+## CI/CD and Infrastructure Stack
+
+### GitHub Actions
+- **Platform**: GitHub Actions (cloud-based CI/CD)
+- **Operating Systems**: Ubuntu 24.04, Windows latest, macOS latest
+- **Python Versions**: 3.11, 3.12 (matrix testing)
+- **Workflow Files**: `.github/workflows/ci.yml`, `.github/workflows/publish.yml`
+
+### PyPI Publishing
+- **Security**: OIDC Trusted Publishing (no API tokens)
+- **Environments**: TestPyPI → PyPI with manual approvals
+- **Attestations**: PEP 740 automatic attestation generation
+- **Package Formats**: Wheel (.whl) and Source Distribution (.tar.gz)
+
+### Documentation Infrastructure
+- **Generator**: Sphinx 8.2+ with Python 3.12
+- **Theme**: Furo (modern, responsive design)
+- **Extensions**:
+  - sphinx-autoapi (automatic API documentation)
+  - myst-parser (Markdown file support)
+  - sphinx-copybutton (copy code buttons)
+  - sphinx-design (design components)
+  - sphinxext-opengraph (social media metadata)
+- **Hosting**: Read the Docs (readthedocs.io)
+- **URL**: https://qt-web-bridge.readthedocs.io/
+- **Formats**: HTML, PDF, ePub
+
+### Dependency Management
+- **Primary**: uv with uv.lock for reproducible builds
+- **Fallback**: pip with requirements files
+- **Updates**: Dependabot for automated dependency updates
+- **Security**: GitHub Security Advisories integration
+
+### Quality Assurance Infrastructure
+- **Code Quality**: Ruff (linting + formatting)
+- **Type Safety**: MyPy with strict configuration
+- **Testing**: Pytest with pytest-qt for Qt widget testing
+- **Pre-commit**: Automated quality gates via git hooks
+- **Coverage**: Pytest-cov for test coverage reporting
 
 ## Technology Decisions and Rationale
 
