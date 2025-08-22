@@ -32,8 +32,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        uv sync --dev
-        uv add --group dev PySide6  # Ensure Qt backend for tests
+        uv sync --group dev
 
     - name: Run quality checks
       run: |
@@ -43,7 +42,9 @@ jobs:
 
     - name: Run tests
       run: |
-        uv run pytest
+        uv run pytest --timeout=300
+      env:
+        QT_QPA_PLATFORM: offscreen
 
   build:
     needs: test
@@ -61,6 +62,10 @@ jobs:
       uses: astral-sh/setup-uv@v4
       with:
         enable-cache: true
+
+    - name: Install build dependencies
+      run: |
+        uv sync --group dev
 
     - name: Build package
       run: |
