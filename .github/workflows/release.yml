@@ -48,6 +48,18 @@ jobs:
         git_committer_name: "github-actions[bot]"
         git_committer_email: "github-actions[bot]@users.noreply.github.com"
 
+  debug:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Debug outputs
+      run: |
+        echo "Released: '${{ needs.release.outputs.released }}'"
+        echo "Version: '${{ needs.release.outputs.version }}'"
+        echo "Tag: '${{ needs.release.outputs.tag }}'"
+        echo "Type check: ${{ needs.release.outputs.released == 'true' }}"
+        echo "Bool check: ${{ needs.release.outputs.released == true }}"
+
   publish:
     needs: release
     if: needs.release.outputs.released == 'true' || needs.release.outputs.released == true
