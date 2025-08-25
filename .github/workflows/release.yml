@@ -62,7 +62,7 @@ jobs:
 
   publish:
     needs: release
-    if: needs.release.outputs.released == 'true' || needs.release.outputs.released == true
+    if: needs.release.outputs.released == 'true'
     uses: ./.github/workflows/publish.yml
     with:
       released: ${{ needs.release.outputs.released }}
