@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.1.3 (2025-08-25)
+
+### Bug Fixes
+
+- **ci**: Resolve boolean/string type mismatch in publish workflow conditions
+  ([`b0d922a`](https://github.com/soren-n/qt-web-bridge/commit/b0d922a604ea93aa665ac9a83505472eed249f07))
+
+
 ## v1.1.2 (2025-08-25)
 
 ### Bug Fixes
