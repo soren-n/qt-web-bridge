@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.1.11 (2025-08-25)
+
+### Bug Fixes
+
+- Exclude PySide2 from unsupported platforms in CI matrix
+  ([`4d0ae4d`](https://github.com/soren-n/qt-web-bridge/commit/4d0ae4d3cbc4129d7524f1d46998044d6b40a9ee))
+
+
 ## v1.1.10 (2025-08-25)
 
 ### Bug Fixes
