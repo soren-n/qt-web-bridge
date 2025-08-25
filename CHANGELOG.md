@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.1.4 (2025-08-25)
+
+### Bug Fixes
+
+- Resolve PyPI publishing workflow conditions and improve README documentation
+  ([`c625ecd`](https://github.com/soren-n/qt-web-bridge/commit/c625ecd29c15720c3c08f6c3d0184f057cbc5fbf))
+
+
 ## v1.1.3 (2025-08-25)
 
 ### Bug Fixes
