@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.1.1 (2025-08-25)
+
+### Bug Fixes
+
+- **ci**: Completely rebuild GitHub Actions workflows to resolve failures
+  ([`99894a7`](https://github.com/soren-n/qt-web-bridge/commit/99894a7d4aa5615ca62efaf1040c5566f5167b51))
+
+
 ## v1.1.0 (2025-08-25)
 
 ### Features
