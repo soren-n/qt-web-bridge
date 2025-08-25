@@ -140,7 +140,6 @@ docs = [
 version_toml = [
     "pyproject.toml:project.version",
 ]
-build_command = ""
 dist_path = "dist/"
 upload_to_vcs_release = true
 

@@ -10,6 +10,83 @@ permissions:
   contents: read
 
 jobs:
+  # Architecture validation - fast qtpy-only tests
+  architecture:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v6
+      with:
+        enable-cache: true
+
+    - name: Test qtpy-only installation (no Qt backend)
+      run: |
+        echo "=== Installing package with only qtpy ==="
+        uv sync --group dev --no-install-project
+        uv pip install -e . --no-deps
+        uv pip install qtpy
+        echo "=== Testing package imports without Qt backend ==="
+        uv run python -c "import qt_web_bridge; print('✅ Package imports successfully with qtpy-only')"
+        echo "=== Testing graceful Qt backend failure ==="
+        uv run python -c "
+        import qt_web_bridge
+        try:
+            # This should fail gracefully since no Qt backend available
+            from qt_web_bridge.webview import BridgedWebView
+            BridgedWebView()
+            print('❌ Should have failed without Qt backend')
+            exit(1)
+        except (ImportError, RuntimeError) as e:
+            print(f'✅ Graceful failure without Qt backend: {type(e).__name__}')
+        except Exception as e:
+            print(f'❌ Unexpected error type: {type(e).__name__}: {e}')
+            exit(1)
+        "
+
+    - name: Validate no direct Qt imports
+      run: |
+        echo "=== Checking for direct Qt imports (should be none) ==="
+        uv run python -c "
+        import ast, os, sys
+        issues = []
+        for root, dirs, files in os.walk('src/'):
+            for file in files:
+                if file.endswith('.py'):
+                    filepath = os.path.join(root, file)
+                    with open(filepath) as f:
+                        try:
+                            tree = ast.parse(f.read())
+                            for node in ast.walk(tree):
+                                if isinstance(node, ast.ImportFrom):
+                                    module = node.module or ''
+                                    if any(qt in module for qt in ['PySide6', 'PyQt6', 'PySide2', 'PyQt5']):
+                                        if not module.startswith('qtpy'):
+                                            issues.append(f'{filepath}: {module}')
+                                elif isinstance(node, ast.Import):
+                                    for alias in node.names:
+                                        name = alias.name
+                                        if any(qt in name for qt in ['PySide6', 'PyQt6', 'PySide2', 'PyQt5']):
+                                            if not name.startswith('qtpy'):
+                                                issues.append(f'{filepath}: {name}')
+                        except Exception as e:
+                            print(f'Warning: Could not parse {filepath}: {e}')
+        if issues:
+            print('❌ Found direct Qt imports:')
+            for issue in issues:
+                print(f'  {issue}')
+            sys.exit(1)
+        else:
+            print('✅ No direct Qt imports found - all through qtpy')
+        "
+
+  # Multi-backend testing - validate qtpy abstraction works
   test:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -17,6 +94,21 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.11", "3.12"]
+        qt-backend:
+          - name: "pyside6"
+            package: "PySide6>=6.0"
+            qt_api: "pyside6"
+          - name: "pyside2"
+            package: "PySide2>=5.15"
+            qt_api: "pyside2"
+          - name: "pyqt6"
+            package: "PyQt6>=6.0"
+            qt_api: "pyqt6"
+        exclude:
+          # PySide2 not available on Python 3.12
+          - python-version: "3.12"
+            qt-backend:
+              name: "pyside2"
 
     steps:
     - uses: actions/checkout@v5
@@ -40,18 +132,25 @@ jobs:
         Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
         sleep 2  # Give Xvfb time to start
 
-    - name: Install dependencies
+    - name: Install dependencies with Qt backend
       run: |
-        echo "=== Installing dependencies ==="
-        uv sync --group dev
+        echo "=== Installing dependencies with Qt backend: ${{ matrix.qt-backend.name }} ==="
+        uv sync --group dev --no-install-project
+        uv pip install -e .
+        uv pip install "${{ matrix.qt-backend.package }}"
         echo "=== Verifying installation ==="
         uv pip list | grep ruff || echo "Ruff not found in installation"
+        echo "=== Qt Backend Info ==="
+        echo "Backend: ${{ matrix.qt-backend.name }}"
+        echo "Package: ${{ matrix.qt-backend.package }}"
+        uv run python -c "import ${{ matrix.qt-backend.qt_api }}; print(f'${{ matrix.qt-backend.name }} version: {${{ matrix.qt-backend.qt_api }}.__version__ if hasattr(${{ matrix.qt-backend.qt_api }}, "__version__") else "unknown"}')"
 
     - name: Debug environment
       run: |
         echo "=== Environment Info ==="
         echo "OS: ${{ runner.os }}"
         echo "Python: ${{ matrix.python-version }}"
+        echo "Qt Backend: ${{ matrix.qt-backend.name }}"
         echo "Architecture: ${{ runner.os == 'Linux' && '$(uname -m)' || runner.os == 'macOS' && '$(uname -m)' || 'x64' }}"
         echo "Display: ${DISPLAY:-'Not set'}"
         echo "=== Tool versions ==="
@@ -59,7 +158,19 @@ jobs:
         uv run python --version
         uv run ruff --version || echo "Ruff not available"
         echo "=== Qt Environment Check ==="
-        uv run python -c "import sys; print(f'Python: {sys.version}'); import PySide6.QtCore; print(f'PySide6: {PySide6.QtCore.__version__}')" || echo "PySide6 import failed"
+        uv run python -c "
+        import sys
+        print(f'Python: {sys.version}')
+        try:
+            import qtpy
+            print(f'qtpy version: {qtpy.__version__}')
+            print(f'qtpy API: {qtpy.API_NAME}')
+            import ${{ matrix.qt-backend.qt_api }}.QtCore
+            qt_version = getattr(${{ matrix.qt-backend.qt_api }}.QtCore, '__version__', 'unknown')
+            print(f'${{ matrix.qt-backend.name }}: {qt_version}')
+        except Exception as e:
+            print(f'Qt import failed: {e}')
+        "
 
     - name: Run linting
       run: |
@@ -83,11 +194,13 @@ jobs:
 
     - name: Run tests
       run: |
-        echo "=== Running bridge tests ==="
+        echo "=== Running bridge tests with ${{ matrix.qt-backend.name }} ==="
+        echo "QT_API: ${QT_API}"
         echo "QT_QPA_PLATFORM: ${QT_QPA_PLATFORM}"
         echo "DISPLAY: ${DISPLAY}"
         uv run pytest tests/test_bridge.py --verbose --timeout=120 -s
       env:
+        QT_API: ${{ matrix.qt-backend.qt_api }}
         QT_QPA_PLATFORM: ${{ runner.os == 'Linux' && 'offscreen' || 'minimal' }}
         DISPLAY: ${{ runner.os == 'Linux' && ':99' || '' }}
         CI: true
@@ -95,11 +208,13 @@ jobs:
 
     - name: Run utility tests
       run: |
-        echo "=== Running utility tests ==="
+        echo "=== Running utility tests with ${{ matrix.qt-backend.name }} ==="
+        echo "QT_API: ${QT_API}"
         echo "QT_QPA_PLATFORM: ${QT_QPA_PLATFORM}"
         echo "DISPLAY: ${DISPLAY}"
         uv run pytest tests/test_utils.py --verbose --timeout=60 -s
       env:
+        QT_API: ${{ matrix.qt-backend.qt_api }}
         QT_QPA_PLATFORM: ${{ runner.os == 'Linux' && 'offscreen' || 'minimal' }}
         DISPLAY: ${{ runner.os == 'Linux' && ':99' || '' }}
         CI: true
