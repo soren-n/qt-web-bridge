@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.1.2 (2025-08-25)
+
+### Bug Fixes
+
+- **ci**: Resolve PyPI publishing workflow issues
+  ([`e226478`](https://github.com/soren-n/qt-web-bridge/commit/e2264789c3e2a67f7e4d61021f9b8f51b05b1059))
+
+
 ## v1.1.1 (2025-08-25)
 
 ### Bug Fixes
