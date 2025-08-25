@@ -60,6 +60,12 @@ jobs:
           # PySide2 not available on Python 3.12
           - python-version: "3.12"
             qt-backend: "pyside2"
+          # PySide2 has no Windows wheels available
+          - os: "windows-latest"
+            qt-backend: "pyside2"
+          # PySide2 has no ARM64 macOS wheels (only intel)
+          - os: "macos-latest"
+            qt-backend: "pyside2"
 
     steps:
     - uses: actions/checkout@v5
