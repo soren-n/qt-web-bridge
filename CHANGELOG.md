@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.1.5 (2025-08-25)
+
+### Bug Fixes
+
+- Enhance README description with more robust CI/CD details
+  ([`5dc2d75`](https://github.com/soren-n/qt-web-bridge/commit/5dc2d75831a7eb81780ffbf56a9e19a7da4ff523))
+
+
 ## v1.1.4 (2025-08-25)
 
 ### Bug Fixes
