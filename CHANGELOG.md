@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.1.10 (2025-08-25)
+
+### Bug Fixes
+
+- Resolve multiple CI workflow issues across platforms
+  ([`7b81b4f`](https://github.com/soren-n/qt-web-bridge/commit/7b81b4f52925706a824c6da44f2ac18dfbe6ad71))
+
+
 ## v1.1.9 (2025-08-25)
 
 ### Bug Fixes
