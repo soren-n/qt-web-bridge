@@ -52,4 +52,8 @@ jobs:
     needs: release
     if: needs.release.outputs.released == 'true'
     uses: ./.github/workflows/publish.yml
+    with:
+      released: ${{ needs.release.outputs.released }}
+      version: ${{ needs.release.outputs.version }}
+      tag: ${{ needs.release.outputs.tag }}
     secrets: inherit
