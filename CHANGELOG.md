@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.1.9 (2025-08-25)
+
+### Bug Fixes
+
+- Consolidate publishing into release workflow to resolve trusted publisher issues
+  ([`f331334`](https://github.com/soren-n/qt-web-bridge/commit/f3313348a980f051351baac5c30aa28331d21701))
+
+
 ## v1.1.8 (2025-08-25)
 
 ### Bug Fixes
