@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.1.8 (2025-08-25)
+
+### Bug Fixes
+
+- Update README to reflect fully automated PyPI publishing
+  ([`2e7c1a8`](https://github.com/soren-n/qt-web-bridge/commit/2e7c1a82aeb59f62838cd86283ae6393ff29e0b1))
+
+
 ## v1.1.7 (2025-08-25)
 
 ### Bug Fixes
