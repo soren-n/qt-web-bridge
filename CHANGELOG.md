@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.1.6 (2025-08-25)
+
+### Bug Fixes
+
+- Correct publish workflow conditions to properly handle workflow_call events
+  ([`a6e89e9`](https://github.com/soren-n/qt-web-bridge/commit/a6e89e96393942c11afc6bec8670bf10e4390eec))
+
+
 ## v1.1.5 (2025-08-25)
 
 ### Bug Fixes
