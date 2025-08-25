@@ -61,7 +61,7 @@ class WebViewPanel(QWidget):
             layout = self.layout()
             if layout is not None:
                 layout.removeWidget(self.webview)
-            self.webview.setParent(None)
+            self.webview.setParent(None)  # type: ignore[call-overload]
 
         # Create new webview
         self.webview = BridgedWebView(self)

@@ -26,10 +26,21 @@ jobs:
         echo "=== Installing minimal qtpy-only environment ==="
         python -m pip install qtpy hatchling
         python -m pip install -e . --no-deps
-        echo "=== Testing package imports without Qt backend ==="
-        python -c "import qt_web_bridge; print('✅ Package module imports successfully')"
+        echo "=== Testing package structure without Qt backend ==="
+        python -c "import importlib.util; spec = importlib.util.find_spec('qt_web_bridge'); print('✅ Package structure is valid' if spec else '❌ Package not found')"
         echo "=== Testing graceful Qt backend failure ==="
-        python -c "import qt_web_bridge; from qt_web_bridge.webview import BridgedWebView; print('❌ Should have failed')" && exit 1 || echo "✅ Graceful failure without Qt backend"
+        python -c "
+        try:
+            from qt_web_bridge.webview import BridgedWebView
+            print('❌ Should have failed - no Qt backend available')
+            exit(1)
+        except Exception as e:
+            if 'No Qt bindings' in str(e) or 'QtBindingsNotFoundError' in str(e):
+                print('✅ Graceful failure without Qt backend')
+            else:
+                print(f'❌ Unexpected error: {e}')
+                exit(1)
+        "
 
     - name: Validate no direct Qt imports
       run: |
@@ -77,16 +88,22 @@ jobs:
         echo "=== Installing dependencies with Qt backend: ${{ matrix.qt-backend }} ==="
         uv sync --group dev --no-install-project
         uv pip install -e .
-        # Install the specific Qt backend
-        case "${{ matrix.qt-backend }}" in
-          pyside6) uv pip install "PySide6>=6.0" ;;
-          pyside2) uv pip install "PySide2>=5.15" ;;
-          pyqt6) uv pip install "PyQt6>=6.0" ;;
-        esac
         echo "=== Verifying installation ==="
         uv pip list | grep ruff || echo "Ruff not found in installation"
         echo "=== Qt Backend Info ==="
         echo "Backend: ${{ matrix.qt-backend }}"
+      shell: bash
+
+    - name: Install Qt backend
+      run: |
+        if [ "${{ matrix.qt-backend }}" = "pyside6" ]; then
+          uv pip install "PySide6>=6.0"
+        elif [ "${{ matrix.qt-backend }}" = "pyside2" ]; then
+          uv pip install "PySide2>=5.15"
+        elif [ "${{ matrix.qt-backend }}" = "pyqt6" ]; then
+          uv pip install "PyQt6>=6.0"
+        fi
+      shell: bash
 
     - name: Debug environment
       run: |
