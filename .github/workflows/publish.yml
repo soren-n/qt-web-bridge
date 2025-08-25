@@ -9,16 +9,19 @@ on:
     inputs:
       released:
         description: 'Whether a release was created'
-        required: true
+        required: false
         type: string
+        default: 'false'
       version:
         description: 'The version that was released'
-        required: true
+        required: false
         type: string
+        default: ''
       tag:
         description: 'The tag that was created'
-        required: true
+        required: false
         type: string
+        default: ''
 
 permissions:
   contents: read
@@ -123,7 +126,7 @@ jobs:
         path: dist/
 
   publish-testpypi:
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_call' && inputs.released == 'true') || startsWith(github.ref, 'refs/tags/v')  # Manual trigger, successful release, or tag push
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_call' && inputs.released == 'true')  # Manual trigger, tag push, or successful release
     runs-on: ubuntu-latest
     needs: build
     environment:
