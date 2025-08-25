@@ -24,6 +24,21 @@ permissions:
   contents: read
 
 jobs:
+  debug-inputs:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Debug workflow inputs and context
+      run: |
+        echo "Event name: ${{ github.event_name }}"
+        echo "Ref: ${{ github.ref }}"
+        echo "Released input: '${{ inputs.released }}'"
+        echo "Version input: '${{ inputs.version }}'"
+        echo "Tag input: '${{ inputs.tag }}'"
+        echo "TestPyPI condition check:"
+        echo "  workflow_dispatch: ${{ github.event_name == 'workflow_dispatch' }}"
+        echo "  workflow_call && released: ${{ github.event_name == 'workflow_call' && inputs.released == 'true' }}"
+        echo "  tag ref: ${{ startsWith(github.ref, 'refs/tags/v') }}"
+
   test:
     runs-on: ubuntu-latest
     strategy:
