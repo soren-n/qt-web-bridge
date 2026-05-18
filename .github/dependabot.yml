@@ -8,6 +8,9 @@ updates:
     commit-message:
       prefix: "deps"
       include: "scope"
+    groups:
+      pip-all:
+        patterns: ["*"]
 
   # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
@@ -17,3 +20,6 @@ updates:
     commit-message:
       prefix: "ci"
       include: "scope"
+    groups:
+      actions-all:
+        patterns: ["*"]
