@@ -2,7 +2,7 @@
 # Keep versions pinned for reproducible builds
 
 # Core documentation tools
-sphinx>=7.1.0,<8.0.0
+sphinx>=7.1.0,<10.0.0
 furo>=2024.1.29          # Modern Sphinx theme
 
 # Sphinx extensions
